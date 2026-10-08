@@ -1,0 +1,16 @@
+# Creates the daily 06:30 Windows scheduled task that runs the WSL script.
+# Run in PowerShell (as Administrator). Edit the three values below first.
+
+$Distro  = "Ubuntu"                                  # from: wsl -l
+$WslUser = "user"                                    # your WSL username
+$Script  = "/home/user/naukri-cv-updater/run_naukri.sh"
+
+$action    = New-ScheduledTaskAction -Execute "C:\Windows\System32\wsl.exe" -Argument "-d $Distro -u $WslUser -- $Script"
+$trigger   = New-ScheduledTaskTrigger -Daily -At 6:30AM
+$settings  = New-ScheduledTaskSettingsSet -StartWhenAvailable -WakeToRun -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
+$principal = New-ScheduledTaskPrincipal -UserId "$env:USERDOMAIN\$env:USERNAME" -LogonType Interactive
+
+Register-ScheduledTask -TaskName "NaukriCV" -Action $action -Trigger $trigger -Settings $settings -Principal $principal -Force
+
+# Verify
+(Get-ScheduledTask -TaskName "NaukriCV").Settings | Select-Object DisallowStartIfOnBatteries, StopIfGoingOnBatteries, StartWhenAvailable, WakeToRun

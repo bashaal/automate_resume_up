@@ -1,0 +1,22 @@
+# Secrets - never commit
+.naukri_env
+*.env
+.env
+
+# Personal documents
+*.pdf
+*.doc
+*.docx
+*.rtf
+
+# Logs and runtime files
+*.log
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+.venv/
+
+# Old test scripts (may contain credentials)
+test_*.py
